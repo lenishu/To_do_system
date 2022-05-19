@@ -109,7 +109,29 @@ def fetch():
 
 
 #new_window 
+def login_function():
+	conn = sqlite3.connect('Login_first_data.db')
+	c = conn.cursor()
+	c.execute('SELECT * FROM addresses')
+	User_Info = c.fetchall()
+	conn.commit()
+	conn.close()
 
+	for tuple_ in User_Info:
+		for name in tuple_:
+			if name == Username_entry.get():
+				valid_tuple =tuple_
+				print(valid_tuple)
+				if valid_tuple[1] == Password_entry.get():
+					print('Accessed')
+					print(valid_tuple)
+					my_canvas.destroy()
+				else:
+					print('Incorrect password')
+				
+			
+def logout_function():
+	pass
 
 
 Login_background = ImageTk.PhotoImage(Image.open( "image/reso.jpg"))
@@ -128,7 +150,7 @@ my_canvas.create_text(350,220 , text="Password",  font=("Times" , 12), fill= "wh
 
 
 #label
-loginButton =  Button(my_canvas, padx=10, pady= 5 , text="Login" , command = root.destroy) 
+loginButton =  Button(my_canvas, padx=10, pady= 5 , text="Login" , command = login_function) 
 loginButton.place(x= 450,y= 300)
 
 signupButton = Button(my_canvas, text = 'Sign Up? ' , command= push)
