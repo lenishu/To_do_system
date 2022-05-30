@@ -9,77 +9,70 @@ root.geometry("1000x500")
 root.resizable(False, False)
 
 
-#push
+#push the users username and password in the database
 
 def push():
 	
 
-	#connect
 	conn = sqlite3.connect('Login_first_data.db')
-
-	#cursour 
 	c = conn.cursor()
 
-	#execute the cursor 
+	#actually insert the value in the database
 	c.execute ("INSERT INTO addresses VALUES(:User_name , :Password)",
 	{
 		'User_name' : Username_entry.get(),
 		'Password' : Password_entry.get()
 	}
-
-	)
-
-	#commit
+		)
 	conn.commit()
-	#close
-	conn.close()
+	conn.close() #everytime you connect into the databse you also close it
 
-	#clear the text box
+	#clear the text box after signing up
 	Username_entry.delete(0,END)
 	Password_entry.delete(0,END)
 
-#fetch
+#that little i button to show sign up accounts and also shows delete option
 def fetch():
 	top = Toplevel()
 	def delete():
+		#delete the selected id from the  database
 			conn = sqlite3.connect('Login_first_data.db')
 			c= conn.cursor()
 			c.execute('DELETE from addresses WHERE oid = ' + Id_number.get())
 			
-			Id_number.delete(0,END)
+			Id_number.delete(0,END)#empty the entry
 
-				#connec
-	
+			#fetch all the  id after delete the required id from the database
+			
 			c.execute('SELECT * , oid from addresses')
 			Info_user = c.fetchall()
-			print(Info_user)
+			print(Info_user) #print as a list of tuple of (username , password , id) after delete <new update>
 
 
-			record_base = ''
+			record_base = '' #create a variable to paste it as a Label
 			for record in Info_user:
-				record_base +=  str(record[0]) + " " +"\t" + str(record[1]) + " " + "\t" + str(record[2]) + '\n'
+				record_base +=  str(record[0]) + " " +"\t" + str(record[1]) + " " + "\t" + str(record[2]) + '\n' 
+				#concantenation of each element of the tuple as a string
 			
 			
 			
 			result = Label(top , text= record_base  )
-			result.grid(row=3 , column= 1 )
+			result.grid(row=3 , column= 1 ) # push the new updated data of signup in the top window
 			conn.commit()
 			conn.close()
 
 
-		#connect
+		
 	conn = sqlite3.connect('Login_first_data.db')
-
-	#cursour 
 	c = conn.cursor()
-	c.execute('SELECT * , oid from addresses')
+	c.execute('SELECT * , oid from addresses') # all the sign up are fetched
 	Info_user = c.fetchall()
 	print(Info_user)
 
 
 	record_base = ''
 	for record in Info_user:
-		record_base +=  str(record[0]) + " " +"\t" + str(record[1]) + " " + "\t" + str(record[2]) + '\n'
+		record_base +=  str(record[0]) + " " +"\t" + str(record[1]) + " " + "\t" + str(record[2]) + '\n' #concantination as above
 	
 	
 	
@@ -98,7 +91,7 @@ def fetch():
 	Delete_button.grid(row = 0 , column = 2  )
 
 	
-	
+
 	#commit
 	conn.commit()
 	#close
@@ -108,7 +101,7 @@ def fetch():
 	top.mainloop()
 
 
-#new_window 
+#login button function
 def login_function():
 	conn = sqlite3.connect('Login_first_data.db')
 	c = conn.cursor()
@@ -117,20 +110,32 @@ def login_function():
 	conn.commit()
 	conn.close()
 
-	for tuple_ in User_Info:
-		for name in tuple_:
-			if name == Username_entry.get():
-				valid_tuple =tuple_
-				print(valid_tuple)
-				if valid_tuple[1] == Password_entry.get():
-					print('Accessed')
-					print(valid_tuple)
-					my_canvas.destroy()
-				else:
-					print('Incorrect password')
+	# for tuple_ in User_Info:
+
+	# 	for name in tuple_:
+	# 		if name == Username_entry.get():
+	# 			valid_tuple =tuple_
+	# 			print(valid_tuple)
+	# 			if valid_tuple[1] == Password_entry.get():
+	# 				print('Accessed')
+	# 				print(valid_tuple)
+	# 				my_canvas.destroy()
+	# 			else:
+	# 				print('Incorrect password')
+
+	
+	# 	my_button = Button(root , text='Logout' , command = logout_function)
+	# 	my_button.pack()
+
+	if (Username_entry.get() , Password_entry.get()) in User_Info:
+		print(Username_entry , Password_entry)
+		print('valid password')
+		
 				
 			
 def logout_function():
+
+	
 	pass
 
 
@@ -155,7 +160,7 @@ loginButton.place(x= 450,y= 300)
 
 signupButton = Button(my_canvas, text = 'Sign Up? ' , command= push)
 signupButton.place(x = 350, y= 300)
-
+ 
 temp_show_account= Button(my_canvas, padx=10, pady= 5 , text="i" , command = fetch ) 
 temp_show_account.place(x = 0, y= 0)
 
